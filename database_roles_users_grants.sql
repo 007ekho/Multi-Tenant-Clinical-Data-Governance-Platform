@@ -167,6 +167,17 @@ GRANT APPLY masking POLICY ON ACCOUNT TO ROLE DATA_GOV_ADMIN;
 
 
 
+-------------------------------------------------STEP 5-------------------------------------------------------------------------
+---------------------------------------------PLEASE NOTE YOU CAN DO THSI FROM A USER WITH THIS ROLE ----------------------------------------
+use role HC_admin
+grant CREATE ROW ACCESS POLICY on schema HEALTHCARE_DB.HEALTHCARE_SCH to role DATA_GOV_ADMIN;
+
+SHOW GRANTS ON TABLE HEALTHCARE_DB.HEALTHCARE_SCH.PATIENTS;
+
+grant create masking policy on schema HEALTHCARE_DB.HEALTHCARE_SCH to role DATA_GOV_ADMIN;
+
+
+
 
 
 
