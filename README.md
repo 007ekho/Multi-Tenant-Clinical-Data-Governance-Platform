@@ -21,22 +21,6 @@ This design reflects patterns used in **FAANG / Big Tech data platforms**, espec
 
 ---
 
-## 🧠 Key Design Principles (Big Tech Lens)
-
-- **Separation of Duties (SoD)**  
-  Infrastructure, security, and governance are owned by different roles.
-  
-- **Policy-Driven Access Control**  
-  Access rules are declarative, centralized, and reusable.
-
-- **Zero-Trust Data Access**  
-  No implicit trust based on user or application.
-
-- **Scalable Multi-Tenancy**  
-  One table, many tenants, zero data leakage.
-
----
-
 ## 🧱 High-Level Architecture
 
 ```mermaid
@@ -73,6 +57,86 @@ flowchart TB
 
 ```
 
+# 🛡️ Data Governance Summary
+
+A cloud-native, enterprise-grade governance framework designed to enforce secure, scalable, and compliant data access using Snowflake’s native capabilities.
+
+---
+
+## 🔐 Role-Based Access Control (RBAC)
+- Hierarchical role model with privilege inheritance  
+- No direct grants to individual users  
+- Enforces least-privilege access by default  
+- Aligned with enterprise IAM best practices  
+
+---
+
+## 🧩 Row-Level Security (Multi-Tenant Isolation)
+- Implemented using Snowflake Row Access Policies  
+- Backed by a centralized governance mapping table  
+- Enforces tenant-level data isolation  
+- Prevents cross-organization data access, even with broad table privileges  
+
+---
+
+## 🧬 Dynamic Column-Level Masking
+- Masking evaluated at query runtime based on the active role  
+- Protects PII / PHI without duplicating data  
+- Enables privacy-safe analytics without views or application logic  
+
+---
+
+## 🏗️ Platform-Enforced Security
+- Security enforced entirely within Snowflake  
+- No WHERE clauses  
+- No custom views  
+- No application-side filtering  
+
+---
+
+## 📜 Compliance-Ready Architecture
+Designed to support regulated environments, including:
+- HIPAA — PHI protection  
+- GDPR — data minimization and controlled access  
+- SOC 2 principles  
+- Zero-trust data access models  
+
+---
+
+## 📈 Scalable & Extensible Design
+- Extendable to Attribute-Based Access Control (ABAC)  
+- Supports time-bound access for contractors and vendors  
+- Enables secure data sharing  
+- Audit logging and data lineage  
+- BI tool integration (Tableau, Power BI, Looker)  
+
+---
+
+## 🏢 Enterprise-Grade Governance
+- Policy-driven, multi-tenant security design  
+- Built using cloud-native data warehouse primitives  
+- Designed for scale, compliance, and real-world production workloads  
+
+---
+
+## 🧠 Key Design Principles (Big Tech Lens)
+
+- **Separation of Duties (SoD)**  
+  Infrastructure, security, and governance are owned by different roles.
+  
+- **Policy-Driven Access Control**  
+  Access rules are declarative, centralized, and reusable.
+
+- **Zero-Trust Data Access**  
+  No implicit trust based on user or application.
+
+- **Scalable Multi-Tenancy**  
+  One table, many tenants, zero data leakage.
+
+---
+
+
+
 
 
 ```mermaid
@@ -86,19 +150,7 @@ graph TD
 
 ```
 
-```
 
-| Role               | Responsibility                     |
-| ------------------ | ---------------------------------- |
-| **SECURITYADMIN**  | Identity & role administration     |
-| **SYSADMIN**       | Object creation & infrastructure   |
-| **DATA_GOV_ADMIN** | Governance, RLS & masking policies |
-| **HC_ADMIN**       | Full healthcare operational access |
-| **HC_ENGINEER**    | Engineering & pipeline access      |
-| **HC_ANALYST**     | Restricted analytics access        |
-
-
-```
 
 # 🗂️ Data Model Overview
 
@@ -136,132 +188,5 @@ This table contains regulated healthcare data, including:
 
 ---
 
-## 🛡️ Governance Capabilities
 
-### 1️⃣ Role-Based Access Control (RBAC)
 
-Access is governed using a hierarchical role-based model:
-
-- Users inherit privileges through **role hierarchy**
-- **No direct grants** are applied to individual users
-- Enforces **least privilege** by default
-
-✅ Aligned with enterprise-grade IAM and security best practices.
-
----
-
-### 2️⃣ Row-Level Security (Multi-Tenant Isolation)
-
-Tenant-level data isolation is enforced using:
-
-- **Snowflake Row Access Policies**
-- A **centralized governance mapping table** that determines row visibility
-
-This ensures:
-- Organizations can only access their own patient records
-- Secure multi-tenant analytics without data leakage
-
----
-
-2️⃣ Row-Level Security (Multi-Tenant Isolation)
-
-Row access is enforced using a Snowflake Row Access Policy backed by a centralized governance mapping table.
-
-CURRENT_ROLE()
-   ↓
-ROW_ACCESS_MAPPING
-   ↓
-Allowed organization_id rows
-
-Access Matrix
-Role	Accessible Organizations
-HC_ADMIN	All tenants
-HC_ENGINEER	Multiple tenants
-HC_ANALYST	Single tenant
-
-🚫 Analysts cannot query data outside their organization — even with full table SELECT privileges.
-
-3️⃣ Dynamic Column-Level Masking (PII / PHI)
-
-Masking is evaluated at query runtime, based on the active role.
-
-Column	Masking Strategy
-First / Last Name	Tokenized hash
-Email	Tokenized hash
-National ID	Redacted
-Diagnosis	Tokenized PHI
-Date of Birth	Year-only generalization
-
-Admins see full values.
-Analysts see privacy-safe representations.
-
-🧪 Same Query, Different Results
-SELECT first_name, email, primary_diagnosis
-FROM HEALTHCARE_DB.HEALTHCARE_SCH.PATIENTS;
-
-Role	Output
-HC_ADMIN	Full unmasked data
-HC_ANALYST	Masked values + restricted rows
-DATA_GOV_ADMIN	Full cross-tenant visibility
-
-✔ No views
-✔ No WHERE clauses
-✔ No application logic
-
-Security is enforced entirely by the platform.
-
-🛠️ Tech Stack
-
-Snowflake
-
-RBAC (Role-Based Access Control)
-
-Row Access Policies (RLS)
-
-Dynamic Data Masking
-
-SQL
-
-Enterprise Data Governance Design
-
-Multi-Tenant Data Architecture
-
-Healthcare Data Security (HIPAA / GDPR-aligned)
-
-🛡️ Compliance & Security Alignment
-
-This architecture supports:
-
-HIPAA — PHI protection
-
-GDPR — data minimization & controlled access
-
-SOC 2 principles
-
-Zero-trust data access models
-
-📈 Scalability & Extensibility
-
-This design can be extended to support:
-
-Attribute-Based Access Control (ABAC)
-
-Time-bound access (contractors, vendors)
-
-Secure data sharing
-
-Audit & lineage tracking
-
-BI tool integration (Tableau, Power BI, Looker)
-
-🎯 Why This Matters to Big Tech
-
-Demonstrates platform-level security thinking
-
-Shows ability to design policy-driven systems
-
-Solves real-world multi-tenant isolation
-
-Uses native cloud data warehouse primitives
-
-Aligns with large-scale, regulated environments
