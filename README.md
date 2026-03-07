@@ -186,6 +186,7 @@ This table contains regulated healthcare data, including:
 
 > ⚠️ All data access must comply with regional data protection regulations (e.g., HIPAA, GDPR).
 
+Author: Success Ekhosuehi
 ---
 
 
