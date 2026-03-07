@@ -186,6 +186,10 @@ This table contains regulated healthcare data, including:
 
 > ⚠️ All data access must comply with regional data protection regulations (e.g., HIPAA, GDPR).
 
+## Connect
+- LinkedIn: https://www.linkedin.com/in/suehi/
+- GitHub: https://github.com/007ekho
+
 Author: Success Ekhosuehi
 ---
 
